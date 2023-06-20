@@ -44,15 +44,6 @@ watch(
     }
   }
 );
-
-const userTyping = computed(() => {
-  console.log("useTyping", props.usersTyping);
-  if (props.usersTyping.length === 0) return "";
-  if (props.usersTyping.length === 1)
-    return `${props.usersTyping[0].name} is typing...`;
-  if (props.usersTyping.length === 2) return "People are typing...";
-  return "Several people are typing...";
-});
 </script>
 <template>
   <!-- Chat Button -->
@@ -69,15 +60,15 @@ const userTyping = computed(() => {
     <div v-else class="box w-[60vw] bg-gray-300 dark:bg-gray-800">
       <!-- Header -->
       <div class="bg-gray-200 dark:bg-gray-900 flex justify-between px-4 py-2">
-        <h2>Customer Support Chat</h2>
+        <h2>Tu personal trainer!!</h2>
         <button @click="isOpen = !isOpen">
           <p>X</p>
         </button>
       </div>
 
       <!-- Messages container -->
-      <div class="p-4 overflow-y-scroll" ref="messageBox">
-        <ul class="flex flex-col gap-2 max-h-[30vh]">
+      <div class="p-4 overflow-y-scroll max-h-[50vh]" ref="messageBox">
+        <ul class="flex flex-col gap-2">
           <ChatBubble
             v-for="message in messages"
             :key="message.id"
@@ -98,7 +89,16 @@ const userTyping = computed(() => {
       <!-- Input -->
       <div class="p-4">
         <form @submit.prevent="submit" class="">
-          <input type="text" v-model="message" class="w-full py-2 px-4" />
+          <input
+            type="text"
+            v-model="message"
+            class="w-full py-2 px-4"
+            :placeholder="
+              messages.length > 0
+                ? ''
+                : 'Hola! Me podrías armar un plan de comidas?'
+            "
+          />
         </form>
       </div>
     </div>
