@@ -1,7 +1,9 @@
 <script setup lang="ts">
+// Importing necessary dependencies and types
 import { nanoid } from "nanoid";
 import { Message, User } from "~~/types";
 
+// Defining the component props
 interface Props {
   me: User;
   users: User[];
@@ -9,42 +11,51 @@ interface Props {
   usersTyping: User[];
 }
 
+// Defining the component props using defineProps helper
 const props = defineProps<Props>();
 
+// Defining the component emits using defineEmits helper
 interface Emits {
   (event: "newMessage", message: Message): void;
 }
 
 const emit = defineEmits<Emits>();
 
-const isOpen = ref(false);
+// Declaring reactive variables
+const isOpen = ref(false); // Represents the state of the chat window (open or closed)
+const message = ref(""); // Represents the input message
 
-const message = ref("");
-
+// Function to submit a new message
 const submit = () => {
+  // Emitting a newMessage event with the composed message object
   emit("newMessage", {
     id: nanoid(),
     createdAt: new Date(),
     text: message.value,
     userId: props.me.id,
   });
-  message.value = "";
+  message.value = ""; // Clearing the input message
 };
 
+// Function to get a User object based on the provided ID
 const getUser = (id: string): User =>
   props.users.find((user) => user.id === id) || props.me;
 
+// Reference to the messageBox element
 const messageBox = ref<HTMLDivElement | null>(null);
+
+// Watching for changes in the number of messages
 watch(
   () => props.messages.length,
   async () => {
-    await nextTick(); // Wait for vue to render.
+    await nextTick(); // Wait for Vue to render
     if (messageBox.value) {
       messageBox.value.scrollTop = messageBox.value.scrollHeight;
     }
   }
 );
 </script>
+
 <template>
   <!-- Chat Button -->
   <div class="fixed bottom-8 right-8">
@@ -92,7 +103,7 @@ watch(
           <input
             type="text"
             v-model="message"
-            class="w-full py-2 px-4"
+            class="w-full py-2 px-4 placeholder:opacity-40"
             :placeholder="
               messages.length > 0
                 ? ''
