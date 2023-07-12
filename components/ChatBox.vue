@@ -27,7 +27,7 @@ const message = ref(""); // Represents the input message
 
 // Function to submit a new message
 const submit = () => {
-  // Emitting a newMessage event with the composed message object
+  // Emitting a newMessage event with the composed message object, this would be a callback in React.
   emit("newMessage", {
     id: nanoid(),
     createdAt: new Date(),
@@ -41,14 +41,14 @@ const submit = () => {
 const getUser = (id: string): User =>
   props.users.find((user) => user.id === id) || props.me;
 
-// Reference to the messageBox element
+// Reference to the messageBox element, this would be a useRef in React.
 const messageBox = ref<HTMLDivElement | null>(null);
 
-// Watching for changes in the number of messages
+// Watching for changes in the number of messages to scroll to bottom.
 watch(
   () => props.messages.length,
   async () => {
-    await nextTick(); // Wait for Vue to render
+    await nextTick(); // Wait for Vue to render to scroll to the bottom.
     if (messageBox.value) {
       messageBox.value.scrollTop = messageBox.value.scrollHeight;
     }
@@ -89,7 +89,7 @@ watch(
             :usersTyping="usersTyping"
           />
           <ChatBubble
-            v-for="user in usersTyping.slice(0, 2)"
+            v-for="user in usersTyping"
             :key="nanoid()"
             :me="me"
             :user="user"
@@ -115,5 +115,3 @@ watch(
     </div>
   </div>
 </template>
-
-<style scoped></style>

@@ -2,12 +2,16 @@
 // Importing necessary dependencies and types
 import { Message, User } from "~~/types";
 
-// Creating reactive variables for the user and bot objects
+// Creating reactive variables for the user and bot objects, useState
 const me = ref<User>({
   id: "user",
   avatar: "/avatar.jpg",
   name: "You",
 });
+
+// const asd = ref(0)
+// const [asd, setAsd] = useState(0)
+
 const bot = ref<User>({
   id: "assistant",
   avatar: "/bot.jpg",
@@ -24,20 +28,23 @@ const messages = ref<Message[]>([]);
 const messagesForAPI = computed(() =>
   messages.value.map((m) => ({
     role: m.userId,
-    content: `Answer this like you are a nutritionist: ${m.text}. Don't say you are a model, act as if you are a human. If the question is not related to nutrition, just say "I don't know".`,
+    content: m.text,
   }))
 );
 
-// Creating a reactive variable for the usersTyping array
+// Creating a reactive variable for the usersTyping array. This array will contain the bot user when the bot is typing and will be used to display the typing indicator.
 const usersTyping = ref<User[]>([]);
 
+// const [isBotTyping, setIsBotTyping] = useState(false);
+
 // Function to handle a new message
-async function handleNewMessage(message: Message) {
+const handleNewMessage = async (message: Message) => {
   // Pushing the new message to the messages array
   messages.value.push(message);
 
   // Pushing the bot user to the usersTyping array
   usersTyping.value.push(bot.value);
+  //setIsBotTyping(true);
 
   // Sending a POST request to the AI API endpoint with the messagesForAPI array as the request body
   const res = await $fetch("/api/ai", {
@@ -64,7 +71,8 @@ async function handleNewMessage(message: Message) {
   // Pushing the new message object to the messages array
   messages.value.push(msg);
   usersTyping.value = [];
-}
+  // setIsBotTyping(false);
+};
 </script>
 
 <template>
